@@ -77,7 +77,7 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
 
     @set_ev_cls(ofp_event.EventOFPFlowStatsReply, MAIN_DISPATCHER)
     def _flow_stats_reply_handler(self, ev):
-        body = ev.msg.body
+        # body = ev.msg.body
 
         # self.logger.info('datapath         '
         #                  'in-port  eth-dst           '
@@ -93,13 +93,13 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
         #                      stat.match['in_port'], stat.match['eth_dst'],
         #                      stat.instructions[0].actions[0].port,
         #                      stat.packet_count, stat.byte_count)
-        #self.logger.info('%s', json.dumps(ev.msg.to_jsondict(), ensure_ascii=True,
+        # self.logger.info('%s', json.dumps(ev.msg.to_jsondict(), ensure_ascii=True,
         #                                  indent=3, sort_keys=True))
         self.ev = ev
 
     @set_ev_cls(ofp_event.EventOFPPortStatsReply, MAIN_DISPATCHER)
     def _port_stats_reply_handler(self, ev):
-        body = ev.msg.body
+        # body = ev.msg.body
 
         # self.logger.info('datapath         port     '
         #                  'rx-pkts  rx-bytes rx-error '
@@ -112,7 +112,7 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
         #                      ev.msg.datapath.id, stat.port_no,
         #                      stat.rx_packets, stat.rx_bytes, stat.rx_errors,
         #                      stat.tx_packets, stat.tx_bytes, stat.tx_errors)
-        #self.logger.info('%s', json.dumps(ev.msg.to_jsondict(), ensure_ascii=True,
+        # self.logger.info('%s', json.dumps(ev.msg.to_jsondict(), ensure_ascii=True,
         #                                  indent=3, sort_keys=True))
         self.ev2 = ev
 
@@ -148,17 +148,67 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
                 mac_table.update({entry_mac: entry_port})
         return mac_table
 
-    def drop_web_packets(self):
+    def drop_web_packets(self, values):
         datapath = self.ev.msg.datapath
-        ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-        match = parser.OFPMatch(eth_type=0x0800, ip_proto=6, tcp_dst=80)
+        proto = datapath.ofproto
+        print(values)
+        ipv4_src = values['ipv4_src']
+        ipv4_dst = values['ipv4_dst']
+        match = parser.OFPMatch(eth_type=0x0800, ip_proto=6, ipv4_dst=ipv4_dst,
+                                                ipv4_src=ipv4_src, tcp_dst=80)
         instruction = [
-            parser.OFPInstructionActions(ofproto.OFPIT_CLEAR_ACTIONS, [])
+            parser.OFPInstructionActions(proto.OFPIT_CLEAR_ACTIONS, [])
         ]
-        mod = parser.OFPFlowMod(datapath=datapath, priority=1,
-                                    match=match, instructions=instruction)
-        datapath.send_msg(mod)
+        msg = parser.OFPFlowMod(datapath,
+                                table_id=0,
+                                priority=2,
+                                command=proto.OFPFC_ADD,
+                                match=match,
+                                instructions=instruction
+                                )
+        datapath.send_msg(msg)
+
+    def drop_dns_packets(self, values):
+        datapath = self.ev.msg.datapath
+        parser = datapath.ofproto_parser
+        proto = datapath.ofproto
+        print(values)
+        eth_src = values['eth_src']
+        eth_dst = values['eth_dst']
+        match = parser.OFPMatch(eth_dst=eth_dst, eth_src=eth_src, udp_dst=53)
+        instruction = [
+            parser.OFPInstructionActions(proto.OFPIT_CLEAR_ACTIONS, [])
+        ]
+        msg = parser.OFPFlowMod(datapath,
+                                table_id=0,
+                                priority=2,
+                                command=proto.OFPFC_ADD,
+                                match=match,
+                                instructions=instruction
+                                )
+        datapath.send_msg(msg)
+
+    def drop_others_packets(self, values):
+        datapath = self.ev.msg.datapath
+        parser = datapath.ofproto_parser
+        proto = datapath.ofproto
+        print(values)
+        eth_src = values['eth_src']
+        eth_dst = values['eth_dst']
+        match = parser.OFPMatch(eth_dst=eth_dst, eth_src=eth_src)
+        instruction = [
+            parser.OFPInstructionActions(proto.OFPIT_CLEAR_ACTIONS, [])
+        ]
+        msg = parser.OFPFlowMod(datapath,
+                                table_id=0,
+                                priority=2,
+                                command=proto.OFPFC_ADD,
+                                match=match,
+                                instructions=instruction
+                                )
+        datapath.send_msg(msg)
+
 
 class SimpleSwitchController(ControllerBase):
 
@@ -202,12 +252,47 @@ class SimpleSwitchController(ControllerBase):
         else:
             return Response(status=503)
 
-    @route('simpleswitch', '/web',
-           methods=['GET'])
-    def web(self, req, **kwargs):
+    @route('simpleswitch', '/web', methods=['PUT'])
+    def drop_web(self, req, **kwargs):
         simple_switch = self.simple_switch_app
-        simple_switch.drop_web_packets()
-        return Response(status=200)
+        try:
+            values = req.json if req.body else {}
+        except ValueError:
+            raise Response(status=400)
+
+        try:
+            simple_switch.drop_web_packets(values)
+            return Response(status=200)
+        except Exception as e:
+            return Response(status=500)
+
+    @route('simpleswitch', '/dns', methods=['PUT'])
+    def drop_dns(self, req, **kwargs):
+        simple_switch = self.simple_switch_app
+        try:
+            values = req.json if req.body else {}
+        except ValueError:
+            raise Response(status=400)
+
+        try:
+            simple_switch.drop_dns_packets(values)
+            return Response(status=200)
+        except Exception as e:
+            return Response(status=500)
+
+    @route('simpleswitch', '/others', methods=['PUT'])
+    def drop_others(self, req, **kwargs):
+        simple_switch = self.simple_switch_app
+        try:
+            values = req.json if req.body else {}
+        except ValueError:
+            raise Response(status=400)
+
+        try:
+            simple_switch.drop_others_packets(values)
+            return Response(status=200)
+        except Exception as e:
+            return Response(status=500)
 
     @route('simpleswitch', url, methods=['PUT'],
            requirements={'dpid': dpid_lib.DPID_PATTERN})

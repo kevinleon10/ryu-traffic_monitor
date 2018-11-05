@@ -3,10 +3,125 @@
       "body": [
          {
             "OFPFlowStats": {
-               "byte_count": 6154, 
+               "byte_count": 148, 
                "cookie": 0, 
-               "duration_nsec": 544000000, 
-               "duration_sec": 27, 
+               "duration_nsec": 201000000, 
+               "duration_sec": 17, 
+               "flags": 0, 
+               "hard_timeout": 0, 
+               "idle_timeout": 0, 
+               "instructions": [
+                  {
+                     "OFPInstructionActions": {
+                        "actions": [], 
+                        "len": 8, 
+                        "type": 5
+                     }
+                  }
+               ], 
+               "length": 80, 
+               "match": {
+                  "OFPMatch": {
+                     "length": 21, 
+                     "oxm_fields": [
+                        {
+                           "OXMTlv": {
+                              "field": "eth_type", 
+                              "mask": null, 
+                              "value": 2048
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "ip_proto", 
+                              "mask": null, 
+                              "value": 6
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "tcp_dst", 
+                              "mask": null, 
+                              "value": 80
+                           }
+                        }
+                     ], 
+                     "type": 1
+                  }
+               }, 
+               "packet_count": 2, 
+               "priority": 2, 
+               "table_id": 0
+            }
+         }, 
+         {
+            "OFPFlowStats": {
+               "byte_count": 3214, 
+               "cookie": 0, 
+               "duration_nsec": 811000000, 
+               "duration_sec": 123, 
+               "flags": 0, 
+               "hard_timeout": 0, 
+               "idle_timeout": 0, 
+               "instructions": [
+                  {
+                     "OFPInstructionActions": {
+                        "actions": [
+                           {
+                              "OFPActionOutput": {
+                                 "len": 16, 
+                                 "max_len": 65509, 
+                                 "port": 2, 
+                                 "type": 0
+                              }
+                           }
+                        ], 
+                        "len": 24, 
+                        "type": 4
+                     }
+                  }
+               ], 
+               "length": 104, 
+               "match": {
+                  "OFPMatch": {
+                     "length": 32, 
+                     "oxm_fields": [
+                        {
+                           "OXMTlv": {
+                              "field": "in_port", 
+                              "mask": null, 
+                              "value": 3
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "eth_src", 
+                              "mask": null, 
+                              "value": "00:00:00:00:00:03"
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "eth_dst", 
+                              "mask": null, 
+                              "value": "00:00:00:00:00:02"
+                           }
+                        }
+                     ], 
+                     "type": 1
+                  }
+               }, 
+               "packet_count": 12, 
+               "priority": 1, 
+               "table_id": 0
+            }
+         }, 
+         {
+            "OFPFlowStats": {
+               "byte_count": 3256, 
+               "cookie": 0, 
+               "duration_nsec": 982000000, 
+               "duration_sec": 119, 
                "flags": 0, 
                "hard_timeout": 0, 
                "idle_timeout": 0, 
@@ -58,17 +173,79 @@
                      "type": 1
                   }
                }, 
-               "packet_count": 23, 
+               "packet_count": 13, 
                "priority": 1, 
                "table_id": 0
             }
          }, 
          {
             "OFPFlowStats": {
-               "byte_count": 977, 
+               "byte_count": 42, 
                "cookie": 0, 
-               "duration_nsec": 461000000, 
-               "duration_sec": 22, 
+               "duration_nsec": 729000000, 
+               "duration_sec": 118, 
+               "flags": 0, 
+               "hard_timeout": 0, 
+               "idle_timeout": 0, 
+               "instructions": [
+                  {
+                     "OFPInstructionActions": {
+                        "actions": [
+                           {
+                              "OFPActionOutput": {
+                                 "len": 16, 
+                                 "max_len": 65509, 
+                                 "port": 3, 
+                                 "type": 0
+                              }
+                           }
+                        ], 
+                        "len": 24, 
+                        "type": 4
+                     }
+                  }
+               ], 
+               "length": 104, 
+               "match": {
+                  "OFPMatch": {
+                     "length": 32, 
+                     "oxm_fields": [
+                        {
+                           "OXMTlv": {
+                              "field": "in_port", 
+                              "mask": null, 
+                              "value": 2
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "eth_src", 
+                              "mask": null, 
+                              "value": "00:00:00:00:00:02"
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "eth_dst", 
+                              "mask": null, 
+                              "value": "00:00:00:00:00:03"
+                           }
+                        }
+                     ], 
+                     "type": 1
+                  }
+               }, 
+               "packet_count": 1, 
+               "priority": 1, 
+               "table_id": 0
+            }
+         }, 
+         {
+            "OFPFlowStats": {
+               "byte_count": 84, 
+               "cookie": 0, 
+               "duration_nsec": 889000000, 
+               "duration_sec": 114, 
                "flags": 0, 
                "hard_timeout": 0, 
                "idle_timeout": 0, 
@@ -120,17 +297,114 @@
                      "type": 1
                   }
                }, 
-               "packet_count": 13, 
+               "packet_count": 2, 
                "priority": 1, 
                "table_id": 0
             }
          }, 
          {
             "OFPFlowStats": {
-               "byte_count": 737, 
+               "byte_count": 803, 
                "cookie": 0, 
-               "duration_nsec": 542000000, 
-               "duration_sec": 27, 
+               "duration_nsec": 810000000, 
+               "duration_sec": 123, 
+               "flags": 0, 
+               "hard_timeout": 0, 
+               "idle_timeout": 0, 
+               "instructions": [
+                  {
+                     "OFPInstructionActions": {
+                        "actions": [
+                           {
+                              "OFPActionOutput": {
+                                 "len": 16, 
+                                 "max_len": 65509, 
+                                 "port": 3, 
+                                 "type": 0
+                              }
+                           }
+                        ], 
+                        "len": 24, 
+                        "type": 4
+                     }
+                  }
+               ], 
+               "length": 144, 
+               "match": {
+                  "OFPMatch": {
+                     "length": 65, 
+                     "oxm_fields": [
+                        {
+                           "OXMTlv": {
+                              "field": "in_port", 
+                              "mask": null, 
+                              "value": 2
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "eth_src", 
+                              "mask": null, 
+                              "value": "00:00:00:00:00:02"
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "eth_dst", 
+                              "mask": null, 
+                              "value": "00:00:00:00:00:03"
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "eth_type", 
+                              "mask": null, 
+                              "value": 2048
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "ipv4_src", 
+                              "mask": null, 
+                              "value": "10.0.0.2"
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "ipv4_dst", 
+                              "mask": null, 
+                              "value": "10.0.0.3"
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "ip_proto", 
+                              "mask": null, 
+                              "value": 6
+                           }
+                        }, 
+                        {
+                           "OXMTlv": {
+                              "field": "tcp_dst", 
+                              "mask": null, 
+                              "value": 80
+                           }
+                        }
+                     ], 
+                     "type": 1
+                  }
+               }, 
+               "packet_count": 10, 
+               "priority": 1, 
+               "table_id": 0
+            }
+         }, 
+         {
+            "OFPFlowStats": {
+               "byte_count": 803, 
+               "cookie": 0, 
+               "duration_nsec": 980000000, 
+               "duration_sec": 119, 
                "flags": 0, 
                "hard_timeout": 0, 
                "idle_timeout": 0, 
@@ -217,17 +491,17 @@
                      "type": 1
                   }
                }, 
-               "packet_count": 9, 
+               "packet_count": 10, 
                "priority": 1, 
                "table_id": 0
             }
          }, 
          {
             "OFPFlowStats": {
-               "byte_count": 1622, 
+               "byte_count": 2788, 
                "cookie": 0, 
-               "duration_nsec": 485000000, 
-               "duration_sec": 33, 
+               "duration_nsec": 481000000, 
+               "duration_sec": 129, 
                "flags": 0, 
                "hard_timeout": 0, 
                "idle_timeout": 0, 
@@ -257,7 +531,7 @@
                      "type": 1
                   }
                }, 
-               "packet_count": 21, 
+               "packet_count": 38, 
                "priority": 0, 
                "table_id": 0
             }
@@ -267,4 +541,3 @@
       "type": 1
    }
 }
-
