@@ -152,7 +152,6 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
         datapath = self.ev.msg.datapath
         parser = datapath.ofproto_parser
         proto = datapath.ofproto
-        print(values)
         ipv4_src = values['ipv4_src']
         ipv4_dst = values['ipv4_dst']
         match = parser.OFPMatch(eth_type=0x0800, ip_proto=6, ipv4_dst=ipv4_dst,
@@ -173,10 +172,10 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
         datapath = self.ev.msg.datapath
         parser = datapath.ofproto_parser
         proto = datapath.ofproto
-        print(values)
-        eth_src = values['eth_src']
-        eth_dst = values['eth_dst']
-        match = parser.OFPMatch(eth_dst=eth_dst, eth_src=eth_src, udp_dst=53)
+        ipv4_src = values['ipv4_src']
+        ipv4_dst = values['ipv4_dst']
+        match = parser.OFPMatch(eth_type=0x0800, ip_proto=17, ipv4_dst=ipv4_dst,
+                                ipv4_src=ipv4_src, udp_dst=53)
         instruction = [
             parser.OFPInstructionActions(proto.OFPIT_CLEAR_ACTIONS, [])
         ]
@@ -193,7 +192,6 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
         datapath = self.ev.msg.datapath
         parser = datapath.ofproto_parser
         proto = datapath.ofproto
-        print(values)
         eth_src = values['eth_src']
         eth_dst = values['eth_dst']
         match = parser.OFPMatch(eth_dst=eth_dst, eth_src=eth_src)
@@ -202,7 +200,7 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
         ]
         msg = parser.OFPFlowMod(datapath,
                                 table_id=0,
-                                priority=2,
+                                priority=3,
                                 command=proto.OFPFC_ADD,
                                 match=match,
                                 instructions=instruction

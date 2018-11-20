@@ -89,7 +89,7 @@ class SimpleSwitch13(app_manager.RyuApp):
         dpid = datapath.id
         self.mac_to_port.setdefault(dpid, {})
 
-        #self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
+        # self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
 
         # learn a mac address to avoid FLOOD next time.
         self.mac_to_port[dpid][src] = in_port
@@ -109,31 +109,38 @@ class SimpleSwitch13(app_manager.RyuApp):
             dst_ip = None
             src_ip = None
             for p in paquet.protocols:
-                #print (p)
-                if p.protocol_name == 'tcp':
-                    if p.src_port == 80:
-                        hasAssignedMatch = True
-                        match = parser.OFPMatch(in_port=in_port, eth_dst=dst, eth_src=src, eth_type=0x0800,
-                                                ipv4_dst=dst_ip,
-                                                ipv4_src=src_ip, ip_proto=6, tcp_src=p.src_port)
-                    elif p.dst_port == 80:
-                        hasAssignedMatch = True
-                        match = parser.OFPMatch(in_port=in_port, eth_dst=dst, eth_src=src, eth_type=0x0800,
-                                                ipv4_dst=dst_ip,
-                                                ipv4_src=src_ip, ip_proto=6, tcp_dst=p.dst_port)
+                #print(p)
+                if hasattr(p, 'protocol_name'):
+                    if p.protocol_name == 'tcp':
+                        if p.src_port == 80:
+                            hasAssignedMatch = True
+                            match = parser.OFPMatch(eth_type=0x0800,
+                                                    ipv4_dst=dst_ip,
+                                                    ipv4_src=src_ip, ip_proto=6, tcp_src=p.src_port)
+                        elif p.dst_port == 80:
+                            hasAssignedMatch = True
+                            match = parser.OFPMatch(eth_type=0x0800,
+                                                    ipv4_dst=dst_ip,
+                                                    ipv4_src=src_ip, ip_proto=6, tcp_dst=p.dst_port)
 
-                elif p.protocol_name == 'udp':
-                    if p.src_port == 53:
-                        match = parser.OFPMatch(in_port=in_port, eth_dst=dst, eth_src=src, udp_src=p.src_port)
-                    elif p.dst_port == 53:
-                        match = parser.OFPMatch(in_port=in_port, eth_dst=dst, eth_src=src, udp_dst=p.dst_port)
+                    elif p.protocol_name == 'udp':
+                        if p.src_port == 53:
+                            hasAssignedMatch = True
+                            match = parser.OFPMatch(eth_type=0x0800,
+                                                    ipv4_dst=dst_ip,
+                                                    ipv4_src=src_ip, ip_proto=17, udp_src=p.src_port)
+                        elif p.dst_port == 53:
+                            hasAssignedMatch = True
+                            match = parser.OFPMatch(eth_type=0x0800,
+                                                    ipv4_dst=dst_ip,
+                                                    ipv4_src=src_ip, ip_proto=17, udp_dst=p.dst_port)
 
-                elif p.protocol_name == 'ethernet':
-                    hasEthernet = True
+                    elif p.protocol_name == 'ethernet':
+                        hasEthernet = True
 
-                elif p.protocol_name == 'ipv4':
-                    dst_ip = p.dst
-                    src_ip = p.src
+                    elif p.protocol_name == 'ipv4':
+                        dst_ip = p.dst
+                        src_ip = p.src
 
             if hasEthernet and not hasAssignedMatch:
                 match = parser.OFPMatch(in_port=in_port, eth_dst=dst, eth_src=src)
